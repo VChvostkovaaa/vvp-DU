@@ -1,0 +1,77 @@
+import math
+
+def square(a, n): 
+# a - cislo jehoz odmocninu chceme vypocitat
+# n je pocet iteraci odmocniny
+
+    if a == 0:
+        return 0
+    if a < 0: # pokud a je mensi nez 0, vyhodi chybu
+        raise ValueError("Nelze vypocitat hodnota odmocniny ze zaporneho cisla")
+    
+
+    # pocatecni hodnota
+    x = a 
+    for i in range(n):
+        x = (a/x + x) / 2
+    return x # aproximace odmocniny z a 
+
+#testovani funkce odmocniny
+print("Testovani prvni casti")
+
+numbers = [0, 2, 10, 25, 50, 100]
+iterations = 3
+
+for num in numbers:
+    approx = square(num, iterations)
+    exact = math.sqrt(num)
+    print(f"{num}: {approx}, {exact}")
+
+print("-----------------------------------------")
+
+
+def odhad_pi(m, n_iter=100):
+    b = 1  
+    v = square(1 - (b / 2) ** 2, n_iter)
+    
+    for i in range(m):
+        b = square((b / 2) ** 2 + (1 - v) ** 2, n_iter)
+        v = square(1 - (b / 2) ** 2, n_iter)
+    
+    n_sides = 6 * (2 ** m)
+    S = (n_sides / 2) * b * v
+    return S
+
+print("Testovani druhe casti: pomoci n-uhelniku")
+for cisla in [1, 5, 10, 50, 100, 500, 1000]:    
+    aproximace_pi = odhad_pi(cisla)
+    error = abs(math.pi - aproximace_pi)
+    print(f"m = {cisla}: π ≈ {aproximace_pi}, Chyba = {error}")
+
+print("-----------------------------------------")
+
+def sqrt_3(n = 1000):
+    return square(3, n)
+
+def aprox_pomoci_n_clenu(n):
+    sqrt3 = sqrt_3()  
+    soucet_aproximaci = 0
+    a_i = (1/2) * (1/2**3)  
+    
+    for i in range(1, n+1):
+        soucet_aproximaci += (1 / (2*i + 1)) * a_i
+        a_i *= ((2*i - 1) / (2*i)) * (1 / 2**2)  
+    
+    pi_approx = 12 * (- sqrt3 / 8 + 1/2 - soucet_aproximaci)
+    return pi_approx
+
+print("Testovani treti casti: pomoci n clenu")
+for test_n in [1, 5, 10, 50, 100, 500, 1000]:
+    pi_approx = aprox_pomoci_n_clenu(test_n)
+    error = abs(math.pi - pi_approx)
+
+    print(f"n = {test_n}: π ≈ {pi_approx}, Chyba = {error}")
+
+print("-----------------------------------------")  
+
+
